@@ -26,9 +26,20 @@ class ContestBase(BaseModel):
     end_date: datetime
     voting_start_date: datetime
     voting_end_date: datetime
+    stem_url: str
+
 
 class ContestCreate(ContestBase):
     pass
+
+
+class ContestUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    start_date: Optional[datetime] = None
+    end_date: Optional[datetime] = None
+    stem_url: Optional[str] = None
+
 
 class Contest(ContestBase):
     id: int
@@ -66,22 +77,6 @@ class RatingCreate(RatingBase):
 
 class Rating(RatingBase):
     id: int
-    created_at: datetime
-
-    class Config:
-        orm_mode = True
-
-
-class StemBase(BaseModel):
-    stem_url: str
-    stem_name: str
-
-class StemCreate(StemBase):
-    pass
-
-class Stem(StemBase):
-    id: int
-    contest_id: int
     created_at: datetime
 
     class Config:

@@ -29,13 +29,13 @@ class Contest(Base):
     end_date = Column(DateTime)
     voting_start_date = Column(DateTime)
     voting_end_date = Column(DateTime)
+    stem_url = Column(String)
     # created_by = Column(Integer, ForeignKey('users.id'))
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # creator = relationship("User", back_populates="contests")
     submissions = relationship("Submission", back_populates="contest")
-    stems = relationship("Stem", back_populates="contest")
 
 
 class Submission(Base):
@@ -62,14 +62,3 @@ class Rating(Base):
 
     submission = relationship("Submission", back_populates="ratings")
     rater = relationship("User", back_populates="ratings")
-
-
-class Stem(Base):
-    __tablename__ = 'stems'
-    id = Column(Integer, primary_key=True, index=True)
-    contest_id = Column(Integer, ForeignKey('contests.id'))
-    stem_url = Column(String)
-    stem_name = Column(String)
-    created_at = Column(DateTime, default=datetime.utcnow)
-
-    contest = relationship("Contest", back_populates="stems")

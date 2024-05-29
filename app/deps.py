@@ -5,6 +5,7 @@ from app.api.database import get_db
 from app.api.services.contests_service import ContestsService
 from app.api.services.ratings_service import RatingsService
 from app.api.services.submissions_service import SubmissionsService
+from app.api.services.users_service import UsersService
 
 
 def get_contests_service(db: Session = Depends(get_db)) -> ContestsService:
@@ -13,6 +14,10 @@ def get_contests_service(db: Session = Depends(get_db)) -> ContestsService:
 
 def get_submissions_service(db: Session = Depends(get_db)) -> SubmissionsService:
     return SubmissionsService(db)
+
+
+def get_users_service(db: Session = Depends(get_db)) -> UsersService:
+    return UsersService(db)
 
 
 def get_ratings_service(

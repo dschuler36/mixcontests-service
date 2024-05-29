@@ -25,3 +25,19 @@ def create_contest(
         contest: schemas.ContestCreate,
         contests_service: ContestsService = Depends(deps.get_contests_service)):
     return contests_service.create_contest(contest)
+
+
+@router.put("/contests/{contest_id}")
+def update_contest(
+        contest_id: int,
+        contest: schemas.ContestUpdate,
+        contests_service: ContestsService = Depends(deps.get_contests_service)
+):
+    return contests_service.update_contest(contest_id, contest)
+
+@router.delete("/contests/{contest_id}")
+def delete_contest(
+        contest_id: int,
+        contests_service: ContestsService = Depends(deps.get_contests_service)
+):
+    return contests_service.delete_contest(contest_id)

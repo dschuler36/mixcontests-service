@@ -1,4 +1,4 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.api import models
@@ -25,3 +25,31 @@ class ContestsService:
         self.db.commit()
         self.db.refresh(db_contest)
         return db_contest
+
+    def update_contest(self, contest_id, contest):
+        db_contest = self.db.query(models.Contest).filter(models.Contest.id == contest_id).first()
+        if db_contest is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contest not found")
+
+        # if db_contest.created_by != current_user.id:
+        #     raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to update this contest")
+
+        for key, value in contest.dict(exclude_unset=True).items():
+            setattr(db_contest, key, value)
+
+        self.db.commit()
+        self.db.refresh(db_contest)
+        return db_contest
+
+    def delete_contest(self, contest_id):
+        db_contest = self.db.query(models.Contest).filter(models.Contest.id == contest_id).first()
+        if db_contest is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contest not found")
+
+        # if db_contest.created_by != current_user.id:
+        #     raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to delete this contest")
+
+        self.db.delete(db_contest)
+        self.db.commit()
+        return db_contest
+
