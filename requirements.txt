@@ -1,0 +1,7 @@
+fastapi
+fastapi_users
+fastapi_users_db_sqlalchemy
+asyncpg # for FastapiUsers
+uvicorn
+sqlalchemy
+alembic
