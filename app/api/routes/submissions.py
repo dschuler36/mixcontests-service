@@ -1,12 +1,10 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
 
 from app import deps
-from app.api import schemas, models
-from app.api.database import get_db
+from app.api import schemas
 from app.api.services.submissions_service import SubmissionsService
 
-router = APIRouter()
+router = APIRouter(prefix="/api", tags=["submissions"])
 
 
 @router.get("/submissions/{submission_id}")

@@ -24,6 +24,8 @@ class ContestBase(BaseModel):
     description: str
     start_date: datetime
     end_date: datetime
+    submission_start_date: datetime
+    submission_end_date: datetime
     voting_start_date: datetime
     voting_end_date: datetime
     stem_url: str

@@ -27,6 +27,8 @@ class Contest(Base):
     description = Column(Text)
     start_date = Column(DateTime)
     end_date = Column(DateTime)
+    submission_start_date = Column(DateTime)
+    submission_end_date = Column(DateTime)
     voting_start_date = Column(DateTime)
     voting_end_date = Column(DateTime)
     stem_url = Column(String)

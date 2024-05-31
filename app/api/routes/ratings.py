@@ -1,11 +1,10 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
 
 from app import deps
 from app.api import schemas
 from app.api.services.ratings_service import RatingsService
 
-router = APIRouter()
+router = APIRouter(prefix="/api", tags=["ratings"])
 
 
 @router.post("/ratings/", response_model=schemas.Rating)

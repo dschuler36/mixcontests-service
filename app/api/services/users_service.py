@@ -9,7 +9,7 @@ class UsersService:
     def __init__(self, db: Session):
         self.db = db
 
-    def create_user(self, user: schemas.User):
+    def create_user(self, user: schemas.UserCreate):
         db_user = models.User(username=user.username, email=user.email, password_hash=user.password)
         self.db.add(db_user)
         self.db.commit()

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -53,3 +55,14 @@ class ContestsService:
         self.db.commit()
         return db_contest
 
+    def get_active_contest(self):
+        current_time = datetime.utcnow()
+        active_contest = self.db.query(models.Contest).filter(
+          models.Contest.start_date <= current_time, models.Contest.end_date >= current_time
+        ).first()
+        print(active_contest)
+
+        if not active_contest:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No active contest found")
+
+        return active_contest
