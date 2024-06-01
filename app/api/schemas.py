@@ -2,6 +2,9 @@ from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
 
+from app.api.enums import SubmissionState
+
+
 class UserBase(BaseModel):
     username: str
     email: str
@@ -56,9 +59,12 @@ class SubmissionBase(BaseModel):
     submission_url: str
     contest_id: int
     user_id: int
+    state: SubmissionState
+
 
 class SubmissionCreate(SubmissionBase):
     pass
+
 
 class Submission(SubmissionBase):
     id: int
@@ -67,6 +73,7 @@ class Submission(SubmissionBase):
 
     class Config:
         orm_mode = True
+        use_enum_values = True
 
 
 class RatingBase(BaseModel):

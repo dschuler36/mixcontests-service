@@ -1,7 +1,9 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Text
+from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Text,  Enum as SQLEnum
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
+
+from app.api.enums import SubmissionState
 
 Base = declarative_base()
 
@@ -48,6 +50,7 @@ class Submission(Base):
     submission_url = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    state = Column(SQLEnum(SubmissionState, values_callable=lambda obj: [e.value for e in obj]))
 
     contest = relationship("Contest", back_populates="submissions")
     user = relationship("User", back_populates="submissions")
