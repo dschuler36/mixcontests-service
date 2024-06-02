@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 from datetime import datetime
 
@@ -6,6 +6,7 @@ from app.api.enums import SubmissionState
 
 
 class UserBase(BaseModel):
+    idp_user_id: str
     username: str
     email: str
 
@@ -20,6 +21,42 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+
+
+class EmailAddress(BaseModel):
+    email_address: EmailStr
+
+
+class UserCreatedData(BaseModel):
+    id: str
+    email_addresses: List[EmailAddress]
+    username: Optional[str] = None
+
+
+class UserUpdatedData(BaseModel):
+    id: str
+    email_addresses: Optional[List[EmailAddress]] = None
+    username: Optional[str] = None
+
+
+class UserDeletedData(BaseModel):
+    id: str
+    deleted: bool
+
+
+class UserCreatedEvent(BaseModel):
+    type: str
+    data: UserCreatedData
+
+
+class UserUpdatedEvent(BaseModel):
+    type: str
+    data: UserUpdatedData
+
+
+class UserDeletedEvent(BaseModel):
+    type: str
+    data: UserDeletedData
 
 
 class ContestBase(BaseModel):

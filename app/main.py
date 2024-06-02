@@ -27,11 +27,11 @@ app.include_router(users.router)
 
 print(settings)
 
-if settings.ENV == "local":
-    # expose localhost to internet to test webhook user events
-    listener = ngrok.forward("localhost:8000", authtoken_from_env=True,
-                             verify_webhook_provider="clerk",
-                             verify_webhook_secret=settings.WEBHOOK_SECRET)
-
+# if settings.ENV == "local":
+#     # expose localhost to internet to test webhook user events
+#     listener = ngrok.forward("localhost:8000", authtoken_from_env=True,
+#                              verify_webhook_provider="clerk",
+#                              verify_webhook_secret=settings.WEBHOOK_SECRET)
+#
 
 

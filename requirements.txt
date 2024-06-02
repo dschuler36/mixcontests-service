@@ -10,3 +10,4 @@ PyJWT==2.8.0
 python-jose
 requests
 ngrok
+svix

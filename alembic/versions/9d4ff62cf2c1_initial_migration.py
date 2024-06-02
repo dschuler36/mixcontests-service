@@ -1,8 +1,8 @@
 """Initial migration
 
-Revision ID: 11d0f0cadcf9
+Revision ID: 9d4ff62cf2c1
 Revises: 
-Create Date: 2024-05-28 19:51:21.135310
+Create Date: 2024-06-01 20:01:56.373714
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '11d0f0cadcf9'
+revision: str = '9d4ff62cf2c1'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -26,8 +26,11 @@ def upgrade() -> None:
     sa.Column('description', sa.Text(), nullable=True),
     sa.Column('start_date', sa.DateTime(), nullable=True),
     sa.Column('end_date', sa.DateTime(), nullable=True),
+    sa.Column('submission_start_date', sa.DateTime(), nullable=True),
+    sa.Column('submission_end_date', sa.DateTime(), nullable=True),
     sa.Column('voting_start_date', sa.DateTime(), nullable=True),
     sa.Column('voting_end_date', sa.DateTime(), nullable=True),
+    sa.Column('stem_url', sa.String(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id')
@@ -35,27 +38,17 @@ def upgrade() -> None:
     op.create_index(op.f('ix_contests_id'), 'contests', ['id'], unique=False)
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('idp_user_id', sa.String(), nullable=False),
     sa.Column('username', sa.String(), nullable=True),
     sa.Column('email', sa.String(), nullable=True),
-    sa.Column('password_hash', sa.String(), nullable=True),
-    sa.Column('profile_picture_url', sa.String(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('email'),
+    sa.UniqueConstraint('username')
     )
-    op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
     op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=False)
-    op.create_index(op.f('ix_users_username'), 'users', ['username'], unique=True)
-    op.create_table('stems',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('contest_id', sa.Integer(), nullable=True),
-    sa.Column('stem_url', sa.String(), nullable=True),
-    sa.Column('stem_name', sa.String(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['contest_id'], ['contests.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_index(op.f('ix_stems_id'), 'stems', ['id'], unique=False)
+    op.create_index(op.f('ix_users_idp_user_id'), 'users', ['idp_user_id'], unique=True)
     op.create_table('submissions',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('contest_id', sa.Integer(), nullable=True),
@@ -63,6 +56,7 @@ def upgrade() -> None:
     sa.Column('submission_url', sa.String(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.Column('state', sa.Enum('Not Entered', 'Entered', 'Submitted', 'Pending Feedback', 'Complete', name='submissionstate'), nullable=True),
     sa.ForeignKeyConstraint(['contest_id'], ['contests.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -88,11 +82,8 @@ def downgrade() -> None:
     op.drop_table('ratings')
     op.drop_index(op.f('ix_submissions_id'), table_name='submissions')
     op.drop_table('submissions')
-    op.drop_index(op.f('ix_stems_id'), table_name='stems')
-    op.drop_table('stems')
-    op.drop_index(op.f('ix_users_username'), table_name='users')
+    op.drop_index(op.f('ix_users_idp_user_id'), table_name='users')
     op.drop_index(op.f('ix_users_id'), table_name='users')
-    op.drop_index(op.f('ix_users_email'), table_name='users')
     op.drop_table('users')
     op.drop_index(op.f('ix_contests_id'), table_name='contests')
     op.drop_table('contests')
