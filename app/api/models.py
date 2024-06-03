@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Text,  Enum as SQLEnum
+from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Text, Enum as SQLEnum, UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
@@ -7,10 +7,21 @@ from app.api.enums import SubmissionState
 
 Base = declarative_base()
 
+
+class AuthUser(Base):
+    '''
+    This is created to mimic the supabase auth.users table where user data is stored. This is so that the alembic
+    migrations can successfully run. This table definition below will never try to get created.
+    '''
+    __tablename__ = 'users'
+    __table_args__ = {'schema': 'auth'}
+
+    id = Column(UUID(as_uuid=True), primary_key=True)
+
+
 class User(Base):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True, index=True)
-    idp_user_id = Column(String, unique=True, nullable=False, index=True)
+    id = Column(UUID(as_uuid=True), ForeignKey('auth.users.id', ondelete='CASCADE'), primary_key=True)
     username = Column(String, unique=True)
     email = Column(String, unique=True)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -45,7 +56,7 @@ class Submission(Base):
     __tablename__ = 'submissions'
     id = Column(Integer, primary_key=True, index=True)
     contest_id = Column(Integer, ForeignKey('contests.id'))
-    user_id = Column(Integer, ForeignKey('users.id'))
+    user_id = Column(UUID, ForeignKey('users.id'))
     submission_url = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -60,7 +71,7 @@ class Rating(Base):
     __tablename__ = 'ratings'
     id = Column(Integer, primary_key=True, index=True)
     submission_id = Column(Integer, ForeignKey('submissions.id'))
-    rated_by = Column(Integer, ForeignKey('users.id'))
+    rated_by = Column(UUID, ForeignKey('users.id'))
     score = Column(Integer)
     created_at = Column(DateTime, default=datetime.utcnow)
 

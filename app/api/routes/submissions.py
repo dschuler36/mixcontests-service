@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import APIRouter, Depends
 
 from app import deps
@@ -23,7 +25,7 @@ def create_submission(
 
 @router.get("/submissions/{user_id}/{contest_id}")
 def get_submission_by_user_and_contest(
-        user_id: int,
+        user_id: UUID,
         contest_id: int,
         submissions_service: SubmissionsService = Depends(deps.get_submissions_service)):
     return submissions_service.get_submission_by_user_and_contest(user_id, contest_id)

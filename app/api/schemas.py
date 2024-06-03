@@ -1,12 +1,12 @@
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 from datetime import datetime
+from uuid import UUID
 
 from app.api.enums import SubmissionState
 
 
 class UserBase(BaseModel):
-    idp_user_id: str
     username: str
     email: str
 
@@ -14,8 +14,7 @@ class UserCreate(UserBase):
     password: str
 
 class User(UserBase):
-    id: int
-    profile_picture_url: Optional[str] = None
+    id: UUID
     created_at: datetime
     updated_at: datetime
 
@@ -28,19 +27,19 @@ class EmailAddress(BaseModel):
 
 
 class UserCreatedData(BaseModel):
-    id: str
+    id: UUID
     email_addresses: List[EmailAddress]
     username: Optional[str] = None
 
 
 class UserUpdatedData(BaseModel):
-    id: str
+    id: UUID
     email_addresses: Optional[List[EmailAddress]] = None
     username: Optional[str] = None
 
 
 class UserDeletedData(BaseModel):
-    id: str
+    id: UUID
     deleted: bool
 
 
@@ -95,7 +94,7 @@ class Contest(ContestBase):
 class SubmissionBase(BaseModel):
     submission_url: str
     contest_id: int
-    user_id: int
+    user_id: UUID
     state: SubmissionState
 
 
@@ -115,7 +114,7 @@ class Submission(SubmissionBase):
 
 class RatingBase(BaseModel):
     submission_id: int
-    rated_by: int
+    rated_by: UUID
     score: int
 
 class RatingCreate(RatingBase):

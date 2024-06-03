@@ -13,6 +13,7 @@ else:
 class Settings(BaseSettings):
     WEBHOOK_SECRET: str
     ENV: str
+    POSTGRES_CONN_STRING: str
 
     class Config:
         env_file = ".env.local" if os.path.exists(".env.local") else ".env"
