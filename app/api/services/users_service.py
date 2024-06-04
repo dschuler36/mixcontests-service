@@ -12,8 +12,8 @@ class UsersService:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_user_by_id(self, idp_user_id):
-        user = self.db.query(models.User).filter(models.User.idp_user_id == idp_user_id).first()
+    def get_user_by_id(self, user_id):
+        user = self.db.query(models.User).filter(models.User.id == user_id).first()
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
         return user
@@ -80,3 +80,15 @@ class UsersService:
             raise HTTPException(status_code=422, detail=str(e))
 
         return {"message": "Event processed"}
+
+    def get_unique_contests_entered(self, user_id):
+        user = self.get_user_by_id(user_id)
+        contests = self.db.query(models.Contest).join(models.Submission).filter(
+            models.Submission.user_id == user_id).distinct().all()
+        return contests
+
+    def get_ratings_given(self, user_id):
+        user = self.get_user_by_id(user_id)
+        ratings_count = self.db.query(models.Rating).filter(models.Rating.rated_by == user_id).count()
+        return {"num_ratings": ratings_count}
+
