@@ -5,11 +5,13 @@ from sqlalchemy.orm import Session
 
 from app.api import models
 from app.api import schemas
+from app.api.services.gcs_service import GCSService
 
 
 class ContestsService:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, gcs_service: GCSService):
         self.db = db
+        self.gcs_service = gcs_service
 
     def get_all_contests(self):
         contests = self.db.query(models.Contest).all()
@@ -21,11 +23,17 @@ class ContestsService:
             raise HTTPException(status_code=404, detail="Contest not found")
         return contest
 
+    def create_contest_gcs_structure(self, db_contest: models.Contest):
+        str_contest_id = str(db_contest.id)
+        self.gcs_service.create_folder(f'{str_contest_id}/stems/')
+        self.gcs_service.create_folder(f'{str_contest_id}/submissions/')
+
     def create_contest(self, contest: schemas.ContestCreate):
         db_contest = models.Contest(**contest.dict())
         self.db.add(db_contest)
         self.db.commit()
         self.db.refresh(db_contest)
+        self.create_contest_gcs_structure(db_contest)
         return db_contest
 
     def update_contest(self, contest_id, contest):

@@ -11,3 +11,4 @@ python-jose
 requests
 ngrok
 svix
+google-cloud-storage

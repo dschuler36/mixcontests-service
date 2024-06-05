@@ -3,11 +3,13 @@ from sqlalchemy.orm import Session
 
 from app.api import models
 from app.api import schemas
+from app.api.services.gcs_service import GCSService
 
 
 class SubmissionsService:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, gcs_service: GCSService):
         self.db = db
+        self.gcs_service = gcs_service
 
     def create_submission(self, submission: schemas.SubmissionCreate):
         try:

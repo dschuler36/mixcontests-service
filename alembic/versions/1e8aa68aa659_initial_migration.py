@@ -10,7 +10,7 @@ from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 
-from db.supabase_user_creation import supabase_user_creation_upgrade, supabase_user_creation_downgrade
+from extras.supabase_user_creation import supabase_user_creation_upgrade, supabase_user_creation_downgrade
 
 # revision identifiers, used by Alembic.
 revision: str = '1e8aa68aa659'

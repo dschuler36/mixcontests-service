@@ -14,6 +14,9 @@ class Settings(BaseSettings):
     WEBHOOK_SECRET: str
     ENV: str
     POSTGRES_CONN_STRING: str
+    GCP_PROJECT_ID: str
+    GCS_BUCKET_NAME: str
+    GOOGLE_APPLICATION_CREDENTIALS: str
 
     class Config:
         env_file = ".env.local" if os.path.exists(".env.local") else ".env"
