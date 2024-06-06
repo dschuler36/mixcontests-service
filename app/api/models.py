@@ -60,6 +60,7 @@ class Submission(Base):
     submission_url = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    # state defines the current stage the user needs to complete, not what they've already completed
     state = Column(SQLEnum(SubmissionState, values_callable=lambda obj: [e.value for e in obj]))
 
     contest = relationship("Contest", back_populates="submissions")

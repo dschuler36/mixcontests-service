@@ -1,8 +1,8 @@
-"""Initial migration
+"""initial migration
 
-Revision ID: 1e8aa68aa659
+Revision ID: 1a3454545737
 Revises: 
-Create Date: 2024-06-02 20:31:34.877851
+Create Date: 2024-06-05 20:24:15.982526
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 from extras.supabase_user_creation import supabase_user_creation_upgrade, supabase_user_creation_downgrade
 
 # revision identifiers, used by Alembic.
-revision: str = '1e8aa68aa659'
+revision: str = '1a3454545737'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -55,7 +55,7 @@ def upgrade() -> None:
     sa.Column('submission_url', sa.String(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.Column('state', sa.Enum('Not Entered', 'Entered', 'Submitted', 'Pending Feedback', 'Complete', name='submissionstate'), nullable=True),
+    sa.Column('state', sa.Enum('Enter Contest', 'Download Stems', 'Submit Mix', 'Give Feedback', 'Check Results', name='submissionstate'), nullable=True),
     sa.ForeignKeyConstraint(['contest_id'], ['contests.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -90,5 +90,4 @@ def downgrade() -> None:
     op.drop_table('users', schema='auth')
     # ### end Alembic commands ###
 
-    # rollback supabase function creation
     supabase_user_creation_downgrade()
