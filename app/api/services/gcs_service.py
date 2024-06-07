@@ -1,6 +1,9 @@
 from app.api.config import settings
-from fastapi import Response
+from fastapi import Response, File
 from google.cloud import storage
+import os
+import tempfile
+from app.api.config import settings
 
 
 class GCSService:
@@ -28,3 +31,14 @@ class GCSService:
             return Response(file_contents, headers=headers)
         except Exception as e:
             return {"error": str(e)}
+
+    def upload_file(self, source_file: File, destination_blob_name):
+        tmp_file_path = tempfile.NamedTemporaryFile()
+        tmp_file_path.name = tmp_file_path.name + '.txt'
+        with open(tmp_file_path.name, 'wb') as tmp_file:
+            tmp_file.write(source_file.file.read())
+
+        full_destination_blob_name = os.path.join(destination_blob_name, source_file.filename)
+        bucket = self.get_bucket()
+        blob = bucket.blob(full_destination_blob_name)
+        blob.upload_from_filename(tmp_file_path.name)

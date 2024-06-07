@@ -29,3 +29,11 @@ def get_submission_by_user_and_contest(
         contest_id: int,
         submissions_service: SubmissionsService = Depends(deps.get_submissions_service)):
     return submissions_service.get_submission_by_user_and_contest(user_id, contest_id)
+
+
+@router.patch("/submissions/{submission_id}/state/{state}")
+def update_submission_state(
+        submission_id: int,
+        state: str,
+        submissions_service: SubmissionsService = Depends(deps.get_submissions_service)):
+    return submissions_service.update_submission_state(submission_id, state)

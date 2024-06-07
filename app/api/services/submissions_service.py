@@ -42,3 +42,14 @@ class SubmissionsService:
             raise HTTPException(status_code=404, detail="Submission not found")
 
         return submission
+
+    def update_submission_state(self, submission_id, state):
+        submission = self.db.query(models.Submission).filter(models.Submission.id == submission_id).first()
+
+        if not submission:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Submission not found")
+
+        submission.state = state
+        self.db.commit()
+        self.db.refresh(submission)
+        return submission

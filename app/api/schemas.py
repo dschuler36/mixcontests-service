@@ -111,18 +111,11 @@ class Submission(SubmissionBase):
         orm_mode = True
         use_enum_values = True
 
-
-class RatingBase(BaseModel):
-    submission_id: int
-    rated_by: UUID
-    score: int
-
-class RatingCreate(RatingBase):
-    pass
-
-class Rating(RatingBase):
-    id: int
-    created_at: datetime
-
-    class Config:
-        orm_mode = True
+class FeedbackCreate(BaseModel):
+    contest_id: int
+    submission_1_id: int
+    submission_2_id: int
+    winner_submission_id: int
+    rater_user_id: UUID
+    feedback_text_1: Optional[str] = None
+    feedback_text_2: Optional[str] = None
