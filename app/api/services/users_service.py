@@ -1,9 +1,11 @@
+from uuid import UUID
+
 from fastapi import HTTPException, Request
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 from svix import Webhook, WebhookVerificationError
 
-from app.api import models
+from app.api import models, schemas
 from app.api.config import settings
 from app.api.schemas import UserCreatedEvent, UserUpdatedEvent, UserDeletedEvent
 
@@ -18,8 +20,8 @@ class UsersService:
             raise HTTPException(status_code=404, detail="User not found")
         return user
 
-    def create_user(self, idp_user_id: str, email: str, username: str):
-        db_user = models.User(idp_user_id=idp_user_id, email=email, username=username)
+    def create_user(self, user: schemas.User):
+        db_user = models.User(id=user.id, email=user.email, username=user.email)
         self.db.add(db_user)
         self.db.commit()
         self.db.refresh(db_user)

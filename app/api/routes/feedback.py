@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import APIRouter, Depends
 
 from app import deps
@@ -20,8 +22,9 @@ def get_feedback_by_id(
     return feedback_service.get_feedback_by_id(feedback_id)
 
 
-@router.get("/feedback/{contest_id}/submissions")
+@router.get("/feedback/{contest_id}/submissions/{user_id}")
 def get_head_to_head_mixes(
         contest_id: int,
+        user_id: UUID,
         feedback_service: FeedbackService = Depends(deps.get_feedback_service)):
-    return feedback_service.get_head_to_head_mixes(contest_id)
+    return feedback_service.get_head_to_head_mixes(contest_id, user_id)

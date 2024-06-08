@@ -21,7 +21,8 @@ class AuthUser(Base):
 
 class User(Base):
     __tablename__ = 'users'
-    id = Column(UUID(as_uuid=True), ForeignKey('auth.users.id', ondelete='CASCADE'), primary_key=True)
+    # id = Column(UUID(as_uuid=True), ForeignKey('auth.users.id', ondelete='CASCADE'), primary_key=True)
+    id = Column(UUID(as_uuid=True), primary_key=True)
     username = Column(String, unique=True)
     email = Column(String, unique=True)
     created_at = Column(DateTime, default=datetime.utcnow)

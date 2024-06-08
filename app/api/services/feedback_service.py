@@ -1,5 +1,6 @@
 import random
 from typing import List, Tuple
+from uuid import UUID
 
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
@@ -15,27 +16,30 @@ class FeedbackService:
         self.db = db
         self.submissions_service = submissions_service
 
-    def fetch_eligible_mixes(self, contest_id: int):
+    def fetch_eligible_mixes(self, contest_id: int, user_id: UUID):
         # This query fetches submissions and their respective contest results
         query = self.db.query(
             models.Submission.id,
             ContestResult.num_feedbacks,
             ContestResult.win_rate
-        ).join(
+        ).outerjoin(
             ContestResult, models.Submission.id == ContestResult.submission_id
         ).filter(
-            ContestResult.contest_id == contest_id
+            models.Submission.contest_id == contest_id,
+            # ensure a user can't rate their own mix
+            models.Submission.user_id != user_id
         ).order_by(
-            ContestResult.num_feedbacks.asc(),
-            ContestResult.win_rate.asc()
+            ContestResult.num_feedbacks.asc().nullsfirst(),
+            ContestResult.win_rate.asc().nullsfirst()
         ).all()
 
         return query
 
-    def select_head_to_head_mixes(self, contest_id: int) -> Tuple[int, int]:
+    def select_head_to_head_mixes(self, contest_id: int, user_id: UUID) -> Tuple[int, int]:
         # Assumption: mixes is a list of tuples (submission_id, num_feedbacks, win_rate)
-        mixes = self.fetch_eligible_mixes(contest_id)
+        mixes = self.fetch_eligible_mixes(contest_id, user_id)
         if len(mixes) < 2:
+            print(mixes)
             raise ValueError("Not enough mixes for head-to-head comparison")
 
         # Filter mixes with the lowest number of feedbacks
@@ -52,9 +56,9 @@ class FeedbackService:
 
         return selected_mixes[0][0], selected_mixes[1][0]
 
-    def get_head_to_head_mixes(self, contest_id: int):
+    def get_head_to_head_mixes(self, contest_id: int, user_id: UUID):
         try:
-            mix1_id, mix2_id = self.select_head_to_head_mixes(contest_id)
+            mix1_id, mix2_id = self.select_head_to_head_mixes(contest_id, user_id)
             mix1_data = self.submissions_service.get_submission_by_id(mix1_id)
             mix2_data = self.submissions_service.get_submission_by_id(mix2_id)
         except ValueError as e:

@@ -7,14 +7,12 @@ from app.api.enums import SubmissionState
 
 
 class UserBase(BaseModel):
+    id: UUID
     username: str
     email: str
 
-class UserCreate(UserBase):
-    password: str
 
 class User(UserBase):
-    id: UUID
     created_at: datetime
     updated_at: datetime
 

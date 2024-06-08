@@ -21,7 +21,7 @@ def get_user(
 
 @router.post("/users", response_model=schemas.User)
 def create_user(
-        user: schemas.UserCreate,
+        user: schemas.UserBase,
         users_service: UsersService = Depends(deps.get_users_service)):
     return users_service.create_user(user)
 
