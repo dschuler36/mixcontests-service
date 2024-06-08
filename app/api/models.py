@@ -59,7 +59,7 @@ class Submission(Base):
     id = Column(Integer, primary_key=True, index=True)
     contest_id = Column(Integer, ForeignKey('contests.id'))
     user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'))
-    submission_url = Column(String)
+    submission_file_path = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     # state defines the current stage the user needs to complete, not what they've already completed

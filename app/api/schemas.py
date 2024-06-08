@@ -92,7 +92,7 @@ class Contest(ContestBase):
 
 
 class SubmissionBase(BaseModel):
-    submission_url: str
+    submission_file_path: str
     contest_id: int
     user_id: UUID
     state: SubmissionState

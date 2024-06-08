@@ -1,5 +1,7 @@
+from datetime import timedelta
+
 from app.api.config import settings
-from fastapi import Response, File
+from fastapi import Response, File, HTTPException
 from google.cloud import storage
 import os
 import tempfile
@@ -42,3 +44,10 @@ class GCSService:
         bucket = self.get_bucket()
         blob = bucket.blob(full_destination_blob_name)
         blob.upload_from_filename(tmp_file_path.name)
+
+    async def generate_signed_url(self, file_name):
+        bucket = self.get_bucket()
+        blob = bucket.blob(file_name)
+        signed_url = blob.generate_signed_url(version="v4", expiration=timedelta(minutes=15), method="GET")
+
+        return {"url": signed_url}
