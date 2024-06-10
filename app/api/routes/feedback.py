@@ -28,3 +28,11 @@ def get_head_to_head_mixes(
         user_id: UUID,
         feedback_service: FeedbackService = Depends(deps.get_feedback_service)):
     return feedback_service.get_head_to_head_mixes(contest_id, user_id)
+
+
+@router.get("/feedback/{contest_id}/count/{user_id}")
+def get_head_to_head_mixes(
+        contest_id: int,
+        user_id: UUID,
+        feedback_service: FeedbackService = Depends(deps.get_feedback_service)):
+    return feedback_service.get_count_feedback_submitted(contest_id, user_id)

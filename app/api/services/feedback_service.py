@@ -108,3 +108,7 @@ class FeedbackService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Feedback not found")
         return feedback
 
+    def get_count_feedback_submitted(self, contest_id, user_id):
+        feedback_count = self.db.query(models.Feedback).filter(models.Feedback.contest_id == contest_id,
+                                                               models.Feedback.rater_user_id == user_id).count()
+        return {"feedback_count": feedback_count}
