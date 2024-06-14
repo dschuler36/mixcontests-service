@@ -33,11 +33,11 @@ def get_unique_contests_entered(
     return users_service.get_unique_contests_entered(user_id)
 
 
-@router.get("/users/{user_id}/ratings")
+@router.get("/users/{user_id}/feedback_count")
 def get_ratings_given(
         user_id: UUID,
         users_service: UsersService = Depends(deps.get_users_service)):
-    return users_service.get_ratings_given(user_id)
+    return users_service.get_feedback_given(user_id)
 
 # @router.post("/users/clerk/webhook")
 # async def sync_webhook_data(

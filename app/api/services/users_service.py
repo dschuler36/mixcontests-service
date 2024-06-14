@@ -89,8 +89,8 @@ class UsersService:
             models.Submission.user_id == user_id).distinct().all()
         return contests
 
-    def get_ratings_given(self, user_id):
+    def get_feedback_given(self, user_id):
         user = self.get_user_by_id(user_id)
-        ratings_count = self.db.query(models.Rating).filter(models.Rating.rated_by == user_id).count()
-        return {"num_ratings": ratings_count}
+        feedback_count = self.db.query(models.Feedback).filter(models.Feedback.rater_user_id == user_id).count()
+        return {"num_feedback": feedback_count}
 
