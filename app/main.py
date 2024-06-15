@@ -4,7 +4,7 @@ from starlette.middleware.cors import CORSMiddleware
 from app.api import models
 from app.api.config import settings
 from app.api.database import engine
-from app.api.routes import contests, feedback, submissions, users, gcs
+from app.api.routes import contests, feedback, submissions, users, gcs, contest_results
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -24,3 +24,4 @@ app.include_router(feedback.router)
 app.include_router(submissions.router)
 app.include_router(users.router)
 app.include_router(gcs.router)
+app.include_router(contest_results.router)

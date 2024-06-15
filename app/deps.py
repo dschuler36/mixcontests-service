@@ -2,6 +2,7 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.api.database import get_db
+from app.api.services.contest_results_service import ContestResultsService
 from app.api.services.contests_service import ContestsService
 from app.api.services.gcs_service import GCSService
 from app.api.services.feedback_service import FeedbackService
@@ -34,3 +35,8 @@ def get_feedback_service(
         submissions_service: SubmissionsService = Depends(get_submissions_service)
 ) -> FeedbackService:
     return FeedbackService(db, submissions_service)
+
+
+def get_contest_results_service(
+        db: Session = Depends(get_db)) -> ContestResultsService:
+    return ContestResultsService(db)
