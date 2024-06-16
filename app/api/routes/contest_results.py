@@ -8,8 +8,8 @@ from app.api.services.contests_service import ContestsService
 router = APIRouter(prefix="/api", tags=["contest_results"])
 
 
-@router.get("/contest_results/{contest_id}")
-def get_results_for_contest_id(
+@router.get("/contest_results/{contest_id}/summary")
+def get_contest_results_summary_for_contest_id(
         contest_id: int,
         contest_results_service: ContestResultsService = Depends(deps.get_contest_results_service)):
-    return contest_results_service.get_results_for_contest_id(contest_id)
+    return contest_results_service.get_contest_results_summary_for_contest_id(contest_id)
