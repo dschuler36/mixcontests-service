@@ -10,7 +10,7 @@ class SubmissionState(Enum):
     # COMPLETE = "Complete"
 
     ENTER_CONTEST = "Enter Contest"
-    DOWNLOAD_STEMS = "Download Stems"
+    DOWNLOAD_TRACKS = "Download Tracks"
     SUBMIT_MIX = "Submit Mix"
     GIVE_FEEDBACK = "Give Feedback"
     CHECK_RESULTS = "Check Results"

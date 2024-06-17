@@ -1,19 +1,19 @@
-"""initial revision
+"""Initial migration
 
-Revision ID: 4e89bba7c6e7
+Revision ID: 887b447716bb
 Revises: 
-Create Date: 2024-06-06 21:09:42.242032
+Create Date: 2024-06-16 20:32:34.774757
 
 """
 from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-
 from extras.supabase_user_creation import supabase_user_creation_upgrade, supabase_user_creation_downgrade
 
+
 # revision identifiers, used by Alembic.
-revision: str = '4e89bba7c6e7'
+revision: str = '887b447716bb'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -27,7 +27,6 @@ def upgrade() -> None:
     sa.Column('email', sa.String(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['id'], ['auth.users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
@@ -54,10 +53,10 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('contest_id', sa.Integer(), nullable=True),
     sa.Column('user_id', sa.UUID(), nullable=True),
-    sa.Column('submission_url', sa.String(), nullable=True),
+    sa.Column('submission_file_path', sa.String(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.Column('state', sa.Enum('Enter Contest', 'Download Stems', 'Submit Mix', 'Give Feedback', 'Check Results', name='submissionstate'), nullable=True),
+    sa.Column('state', sa.Enum('Enter Contest', 'Download Tracks', 'Submit Mix', 'Give Feedback', 'Check Results', name='submissionstate'), nullable=True),
     sa.ForeignKeyConstraint(['contest_id'], ['contests.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -93,7 +92,6 @@ def upgrade() -> None:
     op.create_index(op.f('ix_feedback_feedback_id'), 'feedback', ['feedback_id'], unique=False)
     # ### end Alembic commands ###
 
-    # set row level security and create trigger to update users table from supabase's auth.users
     supabase_user_creation_upgrade()
 
 

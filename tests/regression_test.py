@@ -88,7 +88,7 @@ def create_feedback(contest_id, users):
 
 if __name__ == '__main__':
     base_url = 'http://localhost:8000'
-    users = create_users(50)
+    users = create_users(10)
     print(f'users: {users}')
     contest_id = create_contest()
     print(f'contest_id: {contest_id}')

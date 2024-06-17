@@ -87,7 +87,7 @@ def generate_contest_data(type_to_create):
     return contest
 
 if __name__ == "__main__":
-    type_to_create = TestScenarios.active
+    type_to_create = TestScenarios.voting
     contest = generate_contest_data(type_to_create)
     print(contest)
     create_contest(contest)
