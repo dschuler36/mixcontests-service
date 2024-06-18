@@ -1,8 +1,8 @@
-"""Initial migration
+"""initial revision
 
-Revision ID: 887b447716bb
+Revision ID: 410d417daf22
 Revises: 
-Create Date: 2024-06-16 20:32:34.774757
+Create Date: 2024-06-17 20:15:59.449003
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ from extras.supabase_user_creation import supabase_user_creation_upgrade, supaba
 
 
 # revision identifiers, used by Alembic.
-revision: str = '887b447716bb'
+revision: str = '410d417daf22'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

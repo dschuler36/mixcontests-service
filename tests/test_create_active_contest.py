@@ -15,7 +15,7 @@ def create_contest(data):
     url = "http://localhost:8000/api/contests"
     response = requests.post(url, json=data)
     print(response.status_code)
-    if response.status_code == 201:
+    if response.status_code == 200:
         print(f"Successfully created contest: {data['title']}")
     else:
         print(f"Failed to create contest: {data['title']} - {response.text}")
@@ -87,7 +87,11 @@ def generate_contest_data(type_to_create):
     return contest
 
 if __name__ == "__main__":
-    type_to_create = TestScenarios.voting
+    # Good
+    # type_to_create = TestScenarios.voting
+    # type_to_create = TestScenarios.active
+    # type_to_create = TestScenarios.upcoming
+    type_to_create = TestScenarios.ended
     contest = generate_contest_data(type_to_create)
     print(contest)
     create_contest(contest)

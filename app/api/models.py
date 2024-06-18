@@ -51,7 +51,7 @@ class Contest(Base):
     creator = relationship("User", back_populates="contests")
     submissions = relationship("Submission", back_populates="contest")
     feedbacks = relationship("Feedback", back_populates="contest")
-    contest_results = relationship("ContestResult", back_populates="contest")
+    contest_results = relationship("ContestResult", back_populates="contest", cascade="all, delete-orphan")
 
 
 class Submission(Base):

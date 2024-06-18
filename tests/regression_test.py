@@ -21,11 +21,18 @@ def create_users(num_users):
     return users
 
 
-def create_contest():
+def create_contest(timing):
 
-    contest_start = datetime.now()
-    submission_end = contest_start + timedelta(days=4)
-    contest_end = contest_start + timedelta(days=7)
+    if timing == "just_started":
+        contest_start = datetime.now()
+        submission_end = contest_start + timedelta(days=4)
+        contest_end = contest_start + timedelta(days=7)
+    elif timing == "ended":
+        contest_start = datetime.now() - timedelta(days=7)
+        submission_end = contest_start + timedelta(days=4)
+        contest_end = datetime.now()
+    else:
+        print(f"unknown timing {timing}")
     payload = {
       "title": "The Weekly #1",
       "description": "Our flagship contest",
@@ -87,10 +94,11 @@ def create_feedback(contest_id, users):
 
 
 if __name__ == '__main__':
+    timing = "ended"
     base_url = 'http://localhost:8000'
     users = create_users(10)
     print(f'users: {users}')
-    contest_id = create_contest()
+    contest_id = create_contest(timing)
     print(f'contest_id: {contest_id}')
     submissions = create_submissions(users, contest_id)
     print(f'submissions: {submissions}')
