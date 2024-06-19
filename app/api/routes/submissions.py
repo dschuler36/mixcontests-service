@@ -10,30 +10,30 @@ router = APIRouter(prefix="/api", tags=["submissions"])
 
 
 @router.get("/submissions/{submission_id}")
-def get_submission_by_id(
+async def get_submission_by_id(
         submission_id: int,
         submissions_service: SubmissionsService = Depends(deps.get_submissions_service)):
-    return submissions_service.get_submission_by_id(submission_id)
+    return await submissions_service.get_submission_by_id(submission_id)
 
 
 @router.post("/submissions", response_model=schemas.Submission)
-def create_submission(
+async def create_submission(
         submission: schemas.SubmissionCreate,
         submissions_service: SubmissionsService = Depends(deps.get_submissions_service)):
-    return submissions_service.create_submission(submission)
+    return await submissions_service.create_submission(submission)
 
 
 @router.get("/submissions/{user_id}/{contest_id}")
-def get_submission_by_user_and_contest(
+async def get_submission_by_user_and_contest(
         user_id: UUID,
         contest_id: int,
         submissions_service: SubmissionsService = Depends(deps.get_submissions_service)):
-    return submissions_service.get_submission_by_user_and_contest(user_id, contest_id)
+    return await submissions_service.get_submission_by_user_and_contest(user_id, contest_id)
 
 
 @router.patch("/submissions/{submission_id}/state/{state}")
-def update_submission_state(
+async def update_submission_state(
         submission_id: int,
         state: str,
         submissions_service: SubmissionsService = Depends(deps.get_submissions_service)):
-    return submissions_service.update_submission_state(submission_id, state)
+    return await submissions_service.update_submission_state(submission_id, state)

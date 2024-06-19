@@ -16,7 +16,7 @@ class FeedbackService:
         self.db = db
         self.submissions_service = submissions_service
 
-    def fetch_eligible_mixes(self, contest_id: int, user_id: UUID):
+    async def fetch_eligible_mixes(self, contest_id: int, user_id: UUID):
         # This query fetches submissions and their respective contest results
         query = self.db.query(
             models.Submission.id,
@@ -35,9 +35,9 @@ class FeedbackService:
 
         return query
 
-    def select_head_to_head_mixes(self, contest_id: int, user_id: UUID) -> Tuple[int, int]:
+    async def select_head_to_head_mixes(self, contest_id: int, user_id: UUID) -> Tuple[int, int]:
         # Assumption: mixes is a list of tuples (submission_id, num_feedbacks, win_rate)
-        mixes = self.fetch_eligible_mixes(contest_id, user_id)
+        mixes = await self.fetch_eligible_mixes(contest_id, user_id)
         if len(mixes) < 2:
             print(mixes)
             raise ValueError("Not enough mixes for head-to-head comparison")
@@ -56,11 +56,11 @@ class FeedbackService:
 
         return selected_mixes[0][0], selected_mixes[1][0]
 
-    def get_head_to_head_mixes(self, contest_id: int, user_id: UUID):
+    async def get_head_to_head_mixes(self, contest_id: int, user_id: UUID):
         try:
-            mix1_id, mix2_id = self.select_head_to_head_mixes(contest_id, user_id)
-            mix1_data = self.submissions_service.get_submission_by_id(mix1_id)
-            mix2_data = self.submissions_service.get_submission_by_id(mix2_id)
+            mix1_id, mix2_id = await self.select_head_to_head_mixes(contest_id, user_id)
+            mix1_data = await self.submissions_service.get_submission_by_id(mix1_id)
+            mix2_data = await self.submissions_service.get_submission_by_id(mix2_id)
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
 
@@ -92,7 +92,7 @@ class FeedbackService:
         self.db.commit()
         return result
 
-    def create_feedback(self, feedback):
+    async def create_feedback(self, feedback):
         db_feedback = Feedback(**feedback.dict())
         self.db.add(db_feedback)
         self.db.commit()
@@ -102,7 +102,7 @@ class FeedbackService:
         self.update_contest_results(feedback)
         return db_feedback
 
-    def get_feedback_by_id(self, feedback_id):
+    async def get_feedback_by_id(self, feedback_id):
         feedback = self.db.query(models.Feedback).filter(models.Feedback.feedback_id == feedback_id).first()
         if not feedback:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Feedback not found")

@@ -8,7 +8,7 @@ class ContestResultsService:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_contest_results_summary_for_contest_id(self, contest_id: int):
+    async def get_contest_results_summary_for_contest_id(self, contest_id: int):
         SubmissionAlias = aliased(models.Submission)
         UserAlias = aliased(models.User)
 

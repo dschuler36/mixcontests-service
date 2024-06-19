@@ -9,7 +9,7 @@ router = APIRouter(prefix="/api", tags=["contest_results"])
 
 
 @router.get("/contest_results/{contest_id}/summary")
-def get_contest_results_summary_for_contest_id(
+async def get_contest_results_summary_for_contest_id(
         contest_id: int,
         contest_results_service: ContestResultsService = Depends(deps.get_contest_results_service)):
-    return contest_results_service.get_contest_results_summary_for_contest_id(contest_id)
+    return await contest_results_service.get_contest_results_summary_for_contest_id(contest_id)

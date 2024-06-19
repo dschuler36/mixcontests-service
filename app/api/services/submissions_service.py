@@ -11,11 +11,11 @@ class SubmissionsService:
         self.db = db
         self.gcs_service = gcs_service
 
-    def create_submission(self, submission: schemas.SubmissionCreate):
+    async def create_submission(self, submission: schemas.SubmissionCreate):
         try:
-            existing_submission = self.get_submission_by_user_and_contest(submission.user_id, submission.contest_id)
+            existing_submission = await self.get_submission_by_user_and_contest(submission.user_id, submission.contest_id)
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                detail="User has already submitted to this contest")
+                                detail=f"User has already submitted to this contest")
         except HTTPException as e:
             if e.status_code != status.HTTP_404_NOT_FOUND:
                 raise e
@@ -26,13 +26,13 @@ class SubmissionsService:
         self.db.refresh(db_submission)
         return db_submission
 
-    def get_submission_by_id(self, submission_id: int):
+    async def get_submission_by_id(self, submission_id: int):
         submission = self.db.query(models.Submission).filter(models.Submission.id == submission_id).first()
         if not submission:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Submission not found")
         return submission
 
-    def get_submission_by_user_and_contest(self, user_id, contest_id):
+    async def get_submission_by_user_and_contest(self, user_id, contest_id):
         submission = self.db.query(models.Submission).filter(
             models.Submission.user_id == user_id,
             models.Submission.contest_id == contest_id
@@ -43,7 +43,7 @@ class SubmissionsService:
 
         return submission
 
-    def update_submission_state(self, submission_id, state):
+    async def update_submission_state(self, submission_id, state):
         submission = self.db.query(models.Submission).filter(models.Submission.id == submission_id).first()
 
         if not submission:

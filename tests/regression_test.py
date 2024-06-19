@@ -61,6 +61,7 @@ def create_submissions(users, contest_id):
             "user_id": user_id,
             "state": "Enter Contest"
         }
+        print(f"Entering user_id {user_id} into contest_id {contest_id}")
         response = requests.post(url=f'{base_url}/api/submissions', json=payload)
         if response.status_code != 200:
             raise Exception(response.text)
@@ -94,9 +95,9 @@ def create_feedback(contest_id, users):
 
 
 if __name__ == '__main__':
-    timing = "ended"
+    timing = "just_started"
     base_url = 'http://localhost:8000'
-    users = create_users(10)
+    users = create_users(5)
     print(f'users: {users}')
     contest_id = create_contest(timing)
     print(f'contest_id: {contest_id}')
